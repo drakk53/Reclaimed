@@ -1,5 +1,6 @@
 #include <memory\datum_index.hpp>
 #include <tags\tag.hpp>
+
 #include <tags\tag_reference.hpp>
 
 namespace blam

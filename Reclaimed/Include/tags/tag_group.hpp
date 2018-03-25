@@ -27,4 +27,5 @@ namespace blam
 
 		operator bool() const;
 	};
+	static_assert(sizeof(tag_group) == 0x10);
 }

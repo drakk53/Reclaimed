@@ -47,7 +47,7 @@ namespace blam
 		return *this != none;
 	}
 
-	const tag_reference tag_reference::none = { _tag_none, k_datum_index_none };
+	const tag_reference tag_reference::none = { _tag_none, _datum_index_none };
 
 	tag_reference::tag_reference() :
 		tag_reference(none)
@@ -67,7 +67,7 @@ namespace blam
 	void tag_reference::clear()
 	{
 		group_tag = _tag_none;
-		tag_index = k_datum_index_none;
+		tag_index = _datum_index_none;
 	}
 
 	void tag_reference::set(const tag new_group_tag, const datum_index new_tag_index)

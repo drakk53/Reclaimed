@@ -8,8 +8,9 @@ namespace blam
 	typedef unsigned long datum_index;
 	static_assert(sizeof(datum_index) == 0x4);
 
-	enum : datum_index {
-		k_datum_index_none = 0xFFFFFFFF
+	enum : datum_index
+	{
+		_datum_index_none = 0xFFFFFFFF
 	};
 
 #	define DATUM_INDEX_INDEX(VALUE) ((VALUE) & 0xFFFF)

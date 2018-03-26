@@ -9,8 +9,9 @@ namespace blam
 	typedef unsigned long tag;
 	static_assert(sizeof(tag) == 0x4);
 
-	enum : tag {
-		k_tag_none = 0xFFFFFFFF
+	enum : tag
+	{
+		_tag_none = 0xFFFFFFFF
 	};
 
 	// 32-character ascii string
@@ -25,8 +26,9 @@ namespace blam
 	typedef unsigned long string_id;
 	static_assert(sizeof(string_id) == 0x4);
 
-	enum : string_id {
-		k_string_id_invalid = 0
+	enum : string_id
+	{
+		_string_id_invalid = 0
 	};
 
 	// 8-bit unsigned integer ranging from 0 to 255

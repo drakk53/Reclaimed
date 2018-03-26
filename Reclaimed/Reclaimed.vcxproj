@@ -23,6 +23,9 @@
     <ClInclude Include="Source\cseries\integer_math.hpp" />
     <ClInclude Include="Source\cseries\real_math.hpp" />
     <ClInclude Include="Source\memory\data.hpp" />
+    <ClInclude Include="Source\objects\object_data.hpp" />
+    <ClInclude Include="Source\objects\object_definitions.hpp" />
+    <ClInclude Include="Source\objects\object_types.hpp" />
     <ClInclude Include="Source\tag_files\tag_definitions.hpp" />
     <ClInclude Include="Source\tag_files\tag_groups.hpp" />
   </ItemGroup>

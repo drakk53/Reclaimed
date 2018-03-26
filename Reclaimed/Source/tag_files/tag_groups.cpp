@@ -2,7 +2,7 @@
 
 namespace blam
 {
-	const tag_group tag_group::none = { k_tag_none, k_string_id_invalid };
+	const tag_group tag_group::none = { _tag_none, _string_id_invalid };
 
 	tag_group::tag_group() :
 		tag_group(none)
@@ -10,12 +10,12 @@ namespace blam
 	}
 
 	tag_group::tag_group(const tag group_tag, const string_id group_name) :
-		tag_group(group_tag, k_tag_none, group_name)
+		tag_group(group_tag, _tag_none, group_name)
 	{
 	}
 
 	tag_group::tag_group(const tag group_tag, const tag parent_group_tag, const string_id group_name) :
-		tag_group(group_tag, parent_group_tag, k_tag_none, group_name)
+		tag_group(group_tag, parent_group_tag, _tag_none, group_name)
 	{
 	}
 
@@ -47,7 +47,7 @@ namespace blam
 		return *this != none;
 	}
 
-	const tag_reference tag_reference::none = { k_tag_none, k_datum_index_none };
+	const tag_reference tag_reference::none = { _tag_none, k_datum_index_none };
 
 	tag_reference::tag_reference() :
 		tag_reference(none)
@@ -66,7 +66,7 @@ namespace blam
 
 	void tag_reference::clear()
 	{
-		group_tag = k_tag_none;
+		group_tag = _tag_none;
 		tag_index = k_datum_index_none;
 	}
 

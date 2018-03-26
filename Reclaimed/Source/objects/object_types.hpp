@@ -49,6 +49,7 @@ namespace blam
 			(1 << _object_type_giant),
 
 		_object_type_mask_all =
+			(1 << _object_type_armor) |
 			(1 << _object_type_projectile) |
 			(1 << _object_type_scenery) |
 			(1 << _object_type_sound_scenery) |

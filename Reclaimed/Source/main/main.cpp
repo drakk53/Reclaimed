@@ -70,9 +70,8 @@ namespace blam
 		if (!patch_memory(module_get_address(0x83CC1), "\x90\x90", 2)) return false;
 		if (!patch_memory(module_get_address(0x847A9), "\x90\x90", 2)) return false;
 
-		// disable --account args
-		if (!patch_memory(module_get_address(0x36499E), "\xEB\x0E", 2)) return false;
-		if (!patch_memory(module_get_address(0x36492B), "\x00", 1)) return false;
+		// disable preferences checksum
+		if (!patch_memory(module_get_address(0x9FAF8), "\x90\x90", 2)) return false;
 
 		// hook the game_disposing function
 		if (!patch_call(module_get_address(0x150F), game_disposing)) return false;

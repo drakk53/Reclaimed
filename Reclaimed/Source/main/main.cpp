@@ -1,27 +1,15 @@
 #define WIN32_LEAN_AND_MEAN
-
 #include <Windows.h>
-
 #include <TlHelp32.h>
 
-
-
 #include "cseries\cseries.hpp"
-
 #include "memory\patching.hpp"
-
 #include "main.hpp"
 
-
-
 namespace blam
-
 {
-
 	void *module_get_base_address()
-
 	{
-
 		static void *base_address = nullptr;
 
 		if (base_address == nullptr)
@@ -41,95 +29,51 @@ namespace blam
 		}
 
 		return base_address;
-
 	}
-
-
 
 	const auto game_dispose = (void(*)())0x42E410;
 
-
-
 	void game_disposing()
-
 	{
 
 		//
-
 		// TODO: finalize/dispose/shutdown other things here
-
 		//
-
-
 
 		game_dispose();
-
 	}
-
-
 
 	void patches_apply_core()
-
 	{
-
 		auto module_base_address = (char *)module_get_base_address();
 
-
-
 		// disable tag checksums
-
 		patch_memory(module_base_address + 0x83934, "\xEB");
-
 		patch_memory(module_base_address + 0x83CC1, "\x90\x90");
-
 		patch_memory(module_base_address + 0x847AB, "\x90\x90");
 
-
-
 		// disable preferences.dat checksums
-
 		patch_memory(module_base_address + 0x9FAF8, "\x90\x90\x90\x90\x90\x90");
 
-
-
 		// disable --account args
-
 		patch_memory(module_base_address + 0x36499E, "\xEB\x0E");
-
 		patch_memory(module_base_address + 0x364925, "\xEB\x03");
 
-
-
 		// hook the game_disposing function
-
 		patch_call(module_base_address + 0x150F, game_disposing);
-
 	}
-
 }
 
-
-
 BOOL APIENTRY DllMain(HMODULE, DWORD reason, LPVOID)
-
 {
-
     switch (reason)
-
     {
-
     case DLL_PROCESS_ATTACH:
-
     case DLL_THREAD_ATTACH:
-
     case DLL_THREAD_DETACH:
-
     case DLL_PROCESS_DETACH:
-
         break;
-
     }
 
     return TRUE;
-
 }

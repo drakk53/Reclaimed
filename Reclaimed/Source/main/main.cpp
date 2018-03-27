@@ -8,7 +8,7 @@
 
 namespace blam
 {
-	void *module_get_base_address()
+	void *module_get_address(const dword offset)
 	{
 		static void *base_address = nullptr;
 
@@ -28,10 +28,31 @@ namespace blam
 			base_address = (result != 0) ? (void *)module_entry.modBaseAddr : nullptr;
 		}
 
-		return base_address;
+		return (char *)base_address + offset;
 	}
 
-	const auto game_dispose = (void(*)())0x42E410;
+	void unprotect_memory()
+	{
+		MEMORY_BASIC_INFORMATION MemInfo;
+
+		for (auto offset = 0; VirtualQuery(module_get_address(offset), &MemInfo, sizeof(MEMORY_BASIC_INFORMATION));)
+		{
+			offset += MemInfo.RegionSize;
+
+			if (MemInfo.Protect == PAGE_EXECUTE_READ)
+				VirtualProtect(MemInfo.BaseAddress, MemInfo.RegionSize, PAGE_EXECUTE_READWRITE, &MemInfo.Protect);
+		}
+	}
+
+	bool map_file_validation()
+	{
+		return true;
+	}
+
+	inline void game_dispose()
+	{
+		return static_cast<void(*)()>(module_get_address(0x1140))();
+	}
 
 	void game_disposing()
 	{
@@ -39,39 +60,36 @@ namespace blam
 		// TODO: finalize/dispose/shutdown other things here
 		//
 
-		MessageBox(nullptr, "SHUTTING DOWN!!!", "", MB_OK);
 		game_dispose();
 	}
 
 	bool apply_core_patches()
 	{
-		auto module_base_address = (char *)module_get_base_address();
-
 		// disable tag checksums
-		if (!patch_memory(module_base_address + 0x83934, "\xEB", 1)) return false;
-		if (!patch_memory(module_base_address + 0x83CC1, "\x90\x90", 2)) return false;
-		if (!patch_memory(module_base_address + 0x847AB, "\x90\x90", 2)) return false;
-
-		// disable preferences.dat checksums
-		if (!patch_memory(module_base_address + 0x9FAF8, "\x90\x90\x90\x90\x90\x90", 6)) return false;
-
-		// disable --account args
-		if (!patch_memory(module_base_address + 0x6499E, "\xEB\x0E", 2)) return false;
-		if (!patch_memory(module_base_address + 0x364925, "\xEB\x03", 2)) return false;
+		if (!patch_call(module_get_address(0x8392D), map_file_validation)) return false;
 
 		// hook the game_disposing function
-		if (!patch_call(module_base_address + 0x150F, game_disposing)) return false;
+		if (!patch_call(module_get_address(0x150F), game_disposing)) return false;
 
 		return true;
 	}
 
-	bool game_attach()
+	bool game_attach(HMODULE module)
 	{
 		// disable dpi scaling
 		SetProcessDPIAware();
 
+		// disable thread library calls
+		DisableThreadLibraryCalls(module);
+
+		unprotect_memory();
+
+		MessageBox(nullptr, "Starting up", "", MB_OK);
+
 		// apply patches
 		if (!apply_core_patches()) return false;
+
+		MessageBox(nullptr, "Applied core patches", "", MB_OK);
 
 		return true;
 	}
@@ -82,15 +100,19 @@ namespace blam
 	}
 }
 
-BOOL APIENTRY DllMain(HMODULE, DWORD reason, LPVOID)
+BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID)
 {
 	switch (reason)
 	{
 	case DLL_PROCESS_ATTACH:
-		return blam::game_attach();
+		if (!blam::game_attach(module))
+			return FALSE;
+		return true;
 
 	case DLL_PROCESS_DETACH:
-		return blam::game_detach();
+		if (!blam::game_detach())
+			return FALSE;
+		return TRUE;
 
 	default:
 		break;

@@ -63,27 +63,18 @@ namespace blam
 	}
 }
 
+
+
 BOOL APIENTRY DllMain(HMODULE, DWORD reason, LPVOID)
 {
 	switch (reason)
 	{
-	case DLL_PROCESS_ATTACH:
-		return TRUE; // TODO: Start here
-	case DLL_PROCESS_DETACH:
-		return TRUE; // TODO: End here
-	case DLL_THREAD_ATTACH:
-	case DLL_THREAD_DETACH:
-		return TRUE;
+		case DLL_PROCESS_ATTACH:
+		case DLL_PROCESS_DETACH:
+		case DLL_THREAD_ATTACH:
+		case DLL_THREAD_DETACH:
+			break;
 	}
 
-	return FALSE;
-}
-
-/*
-Required to meet the requirements for the custom DLL import
-of the ms30.dll. This could be removed from the executable
-but it can provide a useful point of reference when debugging
-*/
-extern "C" __declspec(dllexport) int ms30() {
-	return 1;
+	return TRUE;
 }

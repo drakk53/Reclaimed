@@ -15,6 +15,7 @@
     <ClCompile Include="Source\main\main.cpp" />
     <ClCompile Include="Source\memory\data.cpp" />
     <ClCompile Include="Source\memory\patching.cpp" />
+    <ClCompile Include="Source\ms_30_dll_fix.cpp" />
     <ClCompile Include="Source\tag_files\tag_definitions.cpp" />
     <ClCompile Include="Source\tag_files\tag_groups.cpp" />
   </ItemGroup>
@@ -86,6 +87,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -106,6 +108,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>

@@ -1,7 +1,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <TlHelp32.h>
-#include <Psapi.h>
 
 #include "cseries\cseries.hpp"
 #include "memory\patching.hpp"
@@ -81,11 +80,6 @@ namespace blam
 	{
 		return true;
 	}
-}
-
-extern "C" bool __declspec(dllexport) __cdecl get_process_memory_info(HANDLE Process, PPROCESS_MEMORY_COUNTERS ppsmemCounters, DWORD cb)
-{
-	return K32GetProcessMemoryInfo(Process, ppsmemCounters, cb);
 }
 
 BOOL APIENTRY DllMain(HMODULE, DWORD reason, LPVOID)

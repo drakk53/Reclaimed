@@ -35,7 +35,6 @@ namespace blam
 
 	void game_disposing()
 	{
-
 		//
 		// TODO: finalize/dispose/shutdown other things here
 		//
@@ -48,16 +47,16 @@ namespace blam
 		auto module_base_address = (char *)module_get_base_address();
 
 		// disable tag checksums
-		patch_memory(module_base_address + 0x83934, "\xEB");
-		patch_memory(module_base_address + 0x83CC1, "\x90\x90");
-		patch_memory(module_base_address + 0x847AB, "\x90\x90");
+		patch_memory(module_base_address + 0x83934, "\xEB", 1);
+		patch_memory(module_base_address + 0x83CC1, "\x90\x90", 2);
+		patch_memory(module_base_address + 0x847AB, "\x90\x90", 2);
 
 		// disable preferences.dat checksums
-		patch_memory(module_base_address + 0x9FAF8, "\x90\x90\x90\x90\x90\x90");
+		patch_memory(module_base_address + 0x9FAF8, "\x90\x90\x90\x90\x90\x90", 6);
 
 		// disable --account args
-		patch_memory(module_base_address + 0x36499E, "\xEB\x0E");
-		patch_memory(module_base_address + 0x364925, "\xEB\x03");
+		patch_memory(module_base_address + 0x36499E, "\xEB\x0E", 2);
+		patch_memory(module_base_address + 0x364925, "\xEB\x03", 2);
 
 		// hook the game_disposing function
 		patch_call(module_base_address + 0x150F, game_disposing);

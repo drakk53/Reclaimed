@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\cache\cache_files.cpp">
+    <ClCompile Include="Source\main\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\main\main.cpp">
+    <ClCompile Include="Source\cache\cache_files.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\memory\data.cpp">
@@ -30,12 +30,12 @@
     <ClCompile Include="Source\tag_files\tag_groups.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\memory\patching.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\tag_files\tag_groups.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\tag_files\tag_definitions.hpp">
+    <ClInclude Include="Source\cache\cache_files.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\cseries\cseries.hpp">
@@ -50,16 +50,22 @@
     <ClInclude Include="Source\memory\data.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\cache\cache_files.hpp">
+    <ClInclude Include="Source\objects\object_data.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\objects\object_definitions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\objects\object_types.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\objects\object_data.hpp">
+    <ClInclude Include="Source\tag_files\tag_definitions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\objects\object_definitions.hpp">
+    <ClInclude Include="Source\tag_files\tag_groups.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\memory\patching.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

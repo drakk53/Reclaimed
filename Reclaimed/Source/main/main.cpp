@@ -67,6 +67,8 @@ namespace blam
 	{
 		// disable tag checksums
 		if (!patch_call(module_get_address(0x8392D), map_file_validation)) return false;
+		if (!patch_memory(module_get_address(0x83CC1), "\x90\x90", 2)) return false;
+		if (!patch_memory(module_get_address(0x847A9), "\x90\x90", 2)) return false;
 
 		// disable --account args
 		if (!patch_memory(module_get_address(0x36499E), "\xEB\x0E", 2)) return false;

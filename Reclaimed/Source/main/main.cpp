@@ -1,6 +1,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <TlHelp32.h>
+#include <Psapi.h>
 
 #include "cseries\cseries.hpp"
 #include "memory\patching.hpp"
@@ -39,41 +40,66 @@ namespace blam
 		// TODO: finalize/dispose/shutdown other things here
 		//
 
+		MessageBox(nullptr, "SHUTTING DOWN!!!", "", MB_OK);
 		game_dispose();
 	}
 
-	void patches_apply_core()
+	bool apply_core_patches()
 	{
 		auto module_base_address = (char *)module_get_base_address();
 
 		// disable tag checksums
-		patch_memory(module_base_address + 0x83934, "\xEB", 1);
-		patch_memory(module_base_address + 0x83CC1, "\x90\x90", 2);
-		patch_memory(module_base_address + 0x847AB, "\x90\x90", 2);
+		if (!patch_memory(module_base_address + 0x83934, "\xEB", 1)) return false;
+		if (!patch_memory(module_base_address + 0x83CC1, "\x90\x90", 2)) return false;
+		if (!patch_memory(module_base_address + 0x847AB, "\x90\x90", 2)) return false;
 
 		// disable preferences.dat checksums
-		patch_memory(module_base_address + 0x9FAF8, "\x90\x90\x90\x90\x90\x90", 6);
+		if (!patch_memory(module_base_address + 0x9FAF8, "\x90\x90\x90\x90\x90\x90", 6)) return false;
 
 		// disable --account args
-		patch_memory(module_base_address + 0x36499E, "\xEB\x0E", 2);
-		patch_memory(module_base_address + 0x364925, "\xEB\x03", 2);
+		if (!patch_memory(module_base_address + 0x6499E, "\xEB\x0E", 2)) return false;
+		if (!patch_memory(module_base_address + 0x364925, "\xEB\x03", 2)) return false;
 
 		// hook the game_disposing function
-		patch_call(module_base_address + 0x150F, game_disposing);
+		if (!patch_call(module_base_address + 0x150F, game_disposing)) return false;
+
+		return true;
+	}
+
+	bool game_attach()
+	{
+		// disable dpi scaling
+		SetProcessDPIAware();
+
+		// apply patches
+		if (!apply_core_patches()) return false;
+
+		return true;
+	}
+
+	bool game_detach()
+	{
+		return true;
 	}
 }
 
-
+extern "C" bool __declspec(dllexport) __cdecl get_process_memory_info(HANDLE Process, PPROCESS_MEMORY_COUNTERS ppsmemCounters, DWORD cb)
+{
+	return K32GetProcessMemoryInfo(Process, ppsmemCounters, cb);
+}
 
 BOOL APIENTRY DllMain(HMODULE, DWORD reason, LPVOID)
 {
 	switch (reason)
 	{
-		case DLL_PROCESS_ATTACH:
-		case DLL_PROCESS_DETACH:
-		case DLL_THREAD_ATTACH:
-		case DLL_THREAD_DETACH:
-			break;
+	case DLL_PROCESS_ATTACH:
+		return blam::game_attach();
+
+	case DLL_PROCESS_DETACH:
+		return blam::game_detach();
+
+	default:
+		break;
 	}
 
 	return TRUE;

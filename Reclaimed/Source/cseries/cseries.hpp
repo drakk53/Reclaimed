@@ -5,6 +5,8 @@
 
 namespace blam
 {
+#	define try_bool(X) if (!X) return false
+
 	// 4-character tag group identifier
 	typedef unsigned long tag;
 	static_assert(sizeof(tag) == 0x4);

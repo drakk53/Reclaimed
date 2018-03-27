@@ -8,10 +8,10 @@
 
 namespace blam
 {
-	bool patch_memory(void *const address, const char *const data)
+	bool patch_memory(void * const address, const void * const data, const long element_count, const long element_size)
 	{
 		dword temp;
-		auto length = strlen(data);
+		auto length = element_count * element_size;
 
 		if (!VirtualProtect(address, length, PAGE_READWRITE, &temp))
 			return false;

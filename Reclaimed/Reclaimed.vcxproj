@@ -23,6 +23,7 @@
     <ClInclude Include="Source\cseries\cseries.hpp" />
     <ClInclude Include="Source\cseries\integer_math.hpp" />
     <ClInclude Include="Source\cseries\real_math.hpp" />
+    <ClInclude Include="Source\main\main.hpp" />
     <ClInclude Include="Source\memory\data.hpp" />
     <ClInclude Include="Source\memory\patching.hpp" />
     <ClInclude Include="Source\objects\object_data.hpp" />

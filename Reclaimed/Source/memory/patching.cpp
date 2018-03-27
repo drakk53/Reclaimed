@@ -1,3 +1,5 @@
+#include <cstring>
+
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
@@ -6,9 +8,10 @@
 
 namespace blam
 {
-	bool patch_memory(void *const address, const void *const data, const long length)
+	bool patch_memory(void *const address, const char *const data)
 	{
 		dword temp;
+		auto length = strlen(data);
 
 		if (!VirtualProtect(address, length, PAGE_READWRITE, &temp))
 			return false;

@@ -44,7 +44,7 @@ namespace blam
 		}
 	}
 
-	bool map_file_validation()
+	bool map_file_validation(void *)
 	{
 		return true;
 	}
@@ -68,6 +68,10 @@ namespace blam
 		// disable tag checksums
 		if (!patch_call(module_get_address(0x8392D), map_file_validation)) return false;
 
+		// disable --account args
+		if (!patch_memory(module_get_address(0x36499E), "\xEB\x0E", 2)) return false;
+		if (!patch_memory(module_get_address(0x36492B), "\x00", 1)) return false;
+
 		// hook the game_disposing function
 		if (!patch_call(module_get_address(0x150F), game_disposing)) return false;
 
@@ -76,20 +80,12 @@ namespace blam
 
 	bool game_attach(HMODULE module)
 	{
-		// disable dpi scaling
 		SetProcessDPIAware();
-
-		// disable thread library calls
 		DisableThreadLibraryCalls(module);
 
 		unprotect_memory();
 
-		MessageBox(nullptr, "Starting up", "", MB_OK);
-
-		// apply patches
 		if (!apply_core_patches()) return false;
-
-		MessageBox(nullptr, "Applied core patches", "", MB_OK);
 
 		return true;
 	}

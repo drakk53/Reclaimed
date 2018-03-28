@@ -12,12 +12,12 @@ namespace blam
 		auto length = element_count * element_size;
 
 		if (!VirtualProtect(address, length, PAGE_READWRITE, &temp))
-			return false;
+			return true;
 
 		memcpy(address, data, length);
 		VirtualProtect(address, length, temp, &temp);
 
-		return true;
+		return false;
 	}
 
 	bool patch_call(void *const address, void *const function)
@@ -25,7 +25,7 @@ namespace blam
 		dword temp;
 
 		if (!VirtualProtect(address, 5, PAGE_READWRITE, &temp))
-			return false;
+			return true;
 
 		byte temp_jmp[5] = { 0xE8, 0x90, 0x90, 0x90, 0x90 };
 		dword jmp_size = ((dword)function - (dword)address - 5);
@@ -34,7 +34,7 @@ namespace blam
 		memcpy(address, temp_jmp, 5);
 		VirtualProtect(address, 5, temp, &temp);
 
-		return true;
+		return false;
 	}
 
 	bool patch_jump(void *const address, void *const function, bool equal)
@@ -43,7 +43,7 @@ namespace blam
 		dword patch_size = equal ? 6 : 5;
 
 		if (!VirtualProtect(address, patch_size, PAGE_READWRITE, &temp))
-			return false;
+			return true;
 
 		dword jmp_size = ((dword)function - (dword)address - patch_size);
 
@@ -64,6 +64,6 @@ namespace blam
 		
 		VirtualProtect(address, patch_size, temp, &temp);
 
-		return true;
+		return false;
 	}
 }

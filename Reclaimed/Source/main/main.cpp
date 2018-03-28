@@ -97,6 +97,9 @@ namespace blam
 	}
 }
 
+// This is required to meet the modified executable DLLImport
+extern "C" __declspec(dllexport) void ms30(void) { }
+
 BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID)
 {
 	switch (reason)

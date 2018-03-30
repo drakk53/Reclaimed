@@ -1,8 +1,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <TlHelp32.h>
-#include <cstdio>
-#include <detours.h>
 
 #include "cseries\cseries.hpp"
 #include "memory\patching.hpp"
@@ -30,13 +28,6 @@ namespace blam
 		game_dispose();
 	}
 
-	typedef char(__cdecl* game_tick_type)();
-	game_tick_type game_tick = nullptr;
-	char __cdecl game_tick_hook()
-	{
-		return game_tick();
-	}
-
 	bool apply_core_patches()
 	{
 		// disable tag checksums
@@ -50,25 +41,12 @@ namespace blam
 		// hook the game_disposing function
 		if (patch_call(module_get_address(0x150F), game_disposing)) return true;
 
-		game_tick = game_tick_type(module_get_address(0xB3630));
-
-		DetourTransactionBegin();
-		DetourUpdateThread(GetCurrentThread());
-		auto err = DetourAttach(&(PVOID&)game_tick, game_tick_hook);
-		DetourTransactionCommit();
-
 		return false;
 	}
 
 	bool game_attach(HMODULE module)
 	{
 		SetProcessDPIAware();
-
-#ifdef _DEBUG
-		AllocConsole();
-		freopen("CONOUT$", "w", stdout);
-#endif
-
 		DisableThreadLibraryCalls(module);
 
 		unprotect_memory();

@@ -1,6 +1,5 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <detours.h>
 
 #include "cseries\cseries.hpp"
 #include "memory\patching.hpp"
@@ -66,15 +65,5 @@ namespace blam
 		VirtualProtect(address, patch_size, temp, &temp);
 
 		return false;
-	}
-
-	bool detour_function(void** source_pointer, void* hook_pointer)
-	{
-		DetourTransactionBegin();
-		DetourUpdateThread(GetCurrentThread());
-		auto err = DetourAttach(source_pointer, hook_pointer);
-		DetourTransactionCommit();
-
-		return !!err;
 	}
 }

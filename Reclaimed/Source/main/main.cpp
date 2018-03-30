@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <TlHelp32.h>
 #include <cstdio>
+#include <detours.h>
 
 #include "cseries\cseries.hpp"
 #include "memory\patching.hpp"
@@ -33,7 +34,6 @@ namespace blam
 	game_tick_type game_tick = nullptr;
 	char __cdecl game_tick_hook()
 	{
-		printf("Game tick \n");
 		return game_tick();
 	}
 
@@ -51,7 +51,11 @@ namespace blam
 		if (patch_call(module_get_address(0x150F), game_disposing)) return true;
 
 		game_tick = game_tick_type(module_get_address(0xB3630));
-		if (detour_function(game_tick, game_tick_hook)) return false;
+
+		DetourTransactionBegin();
+		DetourUpdateThread(GetCurrentThread());
+		auto err = DetourAttach(&(PVOID&)game_tick, game_tick_hook);
+		DetourTransactionCommit();
 
 		return false;
 	}

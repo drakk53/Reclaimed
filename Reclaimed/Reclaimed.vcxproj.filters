@@ -33,6 +33,9 @@
     <ClCompile Include="Source\memory\patching.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\main\ms_30_dll_fix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\cache\cache_files.hpp">

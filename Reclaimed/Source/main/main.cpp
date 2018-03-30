@@ -1,8 +1,9 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <TlHelp32.h>
+#include <Psapi.h>
 
 #include "cseries\cseries.hpp"
+#include "memory\data.hpp"
 #include "memory\patching.hpp"
 #include "main.hpp"
 
@@ -14,18 +15,14 @@ namespace blam
 
 		if (base_address == nullptr)
 		{
-			auto snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, GetCurrentProcessId());
+			MODULEINFO module_info = { 0 };
 
-			if (snapshot == INVALID_HANDLE_VALUE)
+			auto result = GetModuleInformation(GetCurrentProcess(), GetModuleHandle(nullptr), &module_info, sizeof(module_info));
+			
+			if (!result)
 				return nullptr;
 
-			MODULEENTRY32 module_entry;
-			module_entry.dwSize = sizeof(MODULEENTRY32);
-
-			auto result = Module32First(snapshot, &module_entry);
-			CloseHandle(snapshot);
-
-			base_address = (result != 0) ? (void *)module_entry.modBaseAddr : nullptr;
+			base_address = module_info.lpBaseOfDll;
 		}
 
 		return (char *)base_address + offset;
@@ -49,18 +46,23 @@ namespace blam
 		return true;
 	}
 
-	inline void game_dispose()
+	inline bool map_load_internal(void *data)
 	{
-		return static_cast<void(*)()>(module_get_address(0x1140))();
+		return static_cast<bool(__thiscall *)(void *)>(module_get_address(0xAB190))(data);
 	}
 
-	void game_disposing()
+	inline BOOL shell_dispose_internal()
+	{
+		return static_cast<BOOL(*)()>(module_get_address(0x1140))();
+	}
+
+	BOOL shell_dispose()
 	{
 		//
 		// TODO: finalize/dispose/shutdown other things here
 		//
 
-		game_dispose();
+		return shell_dispose_internal();
 	}
 
 	bool apply_core_patches()
@@ -70,11 +72,15 @@ namespace blam
 		if (!patch_memory(module_get_address(0x83CC1), "\x90\x90", 2)) return false;
 		if (!patch_memory(module_get_address(0x847A9), "\x90\x90", 2)) return false;
 
+		// english patches
+		if (patch_memory(module_get_address(0x2C7651), "\x00", 1)) return true;
+		if (patch_memory(module_get_address(0x2C73DE), "\x00", 1)) return true;
+
 		// disable preferences checksum
 		if (!patch_memory(module_get_address(0x9FAF8), "\x90\x90", 2)) return false;
-
+		
 		// hook the game_disposing function
-		if (!patch_call(module_get_address(0x150F), game_disposing)) return false;
+		if (!patch_call(module_get_address(0x150F), shell_dispose)) return false;
 
 		return true;
 	}
@@ -86,7 +92,11 @@ namespace blam
 
 		unprotect_memory();
 
-		if (!apply_core_patches()) return false;
+		if (!apply_core_patches())
+		{
+			MessageBox(nullptr, "Failed to apply core patches.", "Error", MB_OK);
+			return false;
+		}
 
 		return true;
 	}
@@ -95,6 +105,11 @@ namespace blam
 	{
 		return true;
 	}
+}
+
+int __declspec(dllexport) get_mod_version()
+{
+	return 0;
 }
 
 BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID)

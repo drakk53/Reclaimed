@@ -13,7 +13,6 @@
   <ItemGroup>
     <ClCompile Include="Source\cache\cache_files.cpp" />
     <ClCompile Include="Source\main\main.cpp" />
-    <ClCompile Include="Source\main\ms_30_dll_fix.cpp" />
     <ClCompile Include="Source\memory\data.cpp" />
     <ClCompile Include="Source\memory\patching.cpp" />
     <ClCompile Include="Source\tag_files\tag_definitions.cpp" />

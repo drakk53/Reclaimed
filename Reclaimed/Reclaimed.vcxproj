@@ -69,15 +69,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Source;$(ProjectDir)Libraries\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Source;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <TargetName>ms30</TargetName>
-    <LibraryPath>$(ProjectDir)Libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)Source;$(ProjectDir)Libraries\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Source;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <TargetName>ms30</TargetName>
-    <LibraryPath>$(ProjectDir)Libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -96,7 +94,6 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y $(OutputPath)$(TargetFileName) $(LocalDebuggerWorkingDirectory)\</Command>
@@ -123,7 +120,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y $(OutputPath)$(TargetFileName) $(LocalDebuggerWorkingDirectory)\</Command>

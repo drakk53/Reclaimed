@@ -11,7 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\memory\memory.cpp" />
     <ClCompile Include="Source\cache\cache_files.cpp" />
     <ClCompile Include="Source\main\main.cpp" />
     <ClCompile Include="Source\memory\data.cpp" />
@@ -20,7 +19,6 @@
     <ClCompile Include="Source\tag_files\tag_groups.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\memory\memory.hpp" />
     <ClInclude Include="Source\cache\cache_files.hpp" />
     <ClInclude Include="Source\cseries\cseries.hpp" />
     <ClInclude Include="Source\cseries\integer_math.hpp" />

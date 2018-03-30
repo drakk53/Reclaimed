@@ -33,9 +33,6 @@
     <ClCompile Include="Source\memory\patching.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\memory\memory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\cache\cache_files.hpp">
@@ -72,9 +69,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\main\main.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\memory\memory.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

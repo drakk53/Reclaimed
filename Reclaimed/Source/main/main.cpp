@@ -65,6 +65,21 @@ namespace blam
 		return shell_dispose_internal();
 	}
 
+	byte *init_hf2p_system()
+	{
+		return nullptr;
+	}
+
+	int sub_6DA2A0()
+	{
+		return 0;
+	}
+
+	int sub_6DAD00(float a1, float a2)
+	{
+		return 0;
+	}
+
 	bool apply_core_patches()
 	{
 		// disable tag checksums
@@ -81,6 +96,11 @@ namespace blam
 		
 		// hook the game_disposing function
 		if (!patch_call(module_get_address(0x150F), shell_dispose)) return false;
+
+		// disable hf2p/scaleform (crappily)
+		if (!patch_call(module_get_address(0x2BD12B), init_hf2p_system)) return false;
+		if (!patch_call(module_get_address(0x2BD1EF), sub_6DA2A0)) return false;
+		if (!patch_call(module_get_address(0x2BD1FF), sub_6DAD00)) return false;
 
 		return true;
 	}

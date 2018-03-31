@@ -6,7 +6,7 @@
 
 namespace blam
 {
-	bool patch_memory(void * const address, const void * const data, const long element_count, const long element_size)
+	bool patch_memory(void *const address, const void *const data, const long element_count, const long element_size)
 	{
 		dword temp;
 		auto length = element_count * element_size;

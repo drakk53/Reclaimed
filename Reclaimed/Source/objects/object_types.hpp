@@ -4,6 +4,8 @@
 #include "memory\data.hpp"
 #include "object_data.hpp"
 
+#include "tag_files\tag_definitions.hpp"
+
 namespace blam
 {
 	enum

@@ -75,21 +75,20 @@ namespace blam
 		return 0;
 	}
 
-	int sub_6DAD00(float a1, float a2)
+	int sub_6DAD00(float, float)
 	{
 		return 0;
 	}
 
 	bool apply_core_patches()
 	{
+		// temporary title change *patch*
+		if (!patch_memory(module_get_address(0xDA6528), "H3Reclaimed", 11)) return false;
+
 		// disable tag checksums
 		if (!patch_call(module_get_address(0x8392D), map_file_validation)) return false;
 		if (!patch_memory(module_get_address(0x83CC1), "\x90\x90", 2)) return false;
 		if (!patch_memory(module_get_address(0x847A9), "\x90\x90", 2)) return false;
-
-		// english patches
-		if (patch_memory(module_get_address(0x2C7651), "\x00", 1)) return true;
-		if (patch_memory(module_get_address(0x2C73DE), "\x00", 1)) return true;
 
 		// disable preferences checksum
 		if (!patch_memory(module_get_address(0x9FAF8), "\x90\x90", 2)) return false;

@@ -140,12 +140,21 @@ namespace blam
 		return game_tick_internal();
 	}
 
+	void sub_5B6920() {}
+
 	bool module_initialize(HMODULE module)
 	{
 		SetProcessDPIAware();
 		DisableThreadLibraryCalls(module);
 
 		module_unprotect_memory();
+
+		// disable gameshield initialization
+		if (!module_patch_memory(0x2BCDB6, "\x90\x90\x90\x90\x90", 5)) return false;
+
+		// disable rendering of the build watermark
+		if (!module_patch_call(0x169EDD, sub_5B6920)) return false;
+		if (!module_patch_call(0x27E999, sub_5B6920)) return false;
 
 		// temporary title change *patch*
 		if (!module_patch_memory(0xDA6528, "H3Reclaimed", 11)) return false;

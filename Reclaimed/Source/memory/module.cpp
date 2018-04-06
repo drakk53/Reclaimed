@@ -59,7 +59,9 @@ namespace blam
 		*(long *)module_get_address(0x2D2B90C) = game_type;
 		*(long *)module_get_address(0x2D2B5E0) = map_type;
 		*(byte *)module_get_address(0x2D2BA31) = 0;
+		
 		module_patch_memory(0x2D2B609, map_path, strlen(map_path) + 1);
+
 		*(bool *)module_get_address(0x2D2B5D0) = true;
 	}
 

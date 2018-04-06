@@ -12,9 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\cache\cache_files.cpp" />
+    <ClCompile Include="Source\input\input.cpp" />
     <ClCompile Include="Source\main\main.cpp" />
     <ClCompile Include="Source\memory\data.cpp" />
-    <ClCompile Include="Source\memory\patching.cpp" />
+    <ClCompile Include="Source\memory\module.cpp" />
     <ClCompile Include="Source\objects\object_definitions.cpp" />
     <ClCompile Include="Source\tag_files\tag_definitions.cpp" />
     <ClCompile Include="Source\tag_files\tag_groups.cpp" />
@@ -24,9 +25,9 @@
     <ClInclude Include="Source\cseries\cseries.hpp" />
     <ClInclude Include="Source\cseries\integer_math.hpp" />
     <ClInclude Include="Source\cseries\real_math.hpp" />
-    <ClInclude Include="Source\main\main.hpp" />
+    <ClInclude Include="Source\input\input.hpp" />
     <ClInclude Include="Source\memory\data.hpp" />
-    <ClInclude Include="Source\memory\patching.hpp" />
+    <ClInclude Include="Source\memory\module.hpp" />
     <ClInclude Include="Source\objects\object_data.hpp" />
     <ClInclude Include="Source\objects\object_definitions.hpp" />
     <ClInclude Include="Source\objects\object_types.hpp" />

@@ -30,10 +30,13 @@
     <ClCompile Include="Source\tag_files\tag_groups.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\memory\patching.cpp">
+    <ClCompile Include="Source\objects\object_definitions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\objects\object_definitions.cpp">
+    <ClCompile Include="Source\memory\module.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\input\input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,10 +71,10 @@
     <ClInclude Include="Source\tag_files\tag_groups.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\memory\patching.hpp">
+    <ClInclude Include="Source\input\input.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\main\main.hpp">
+    <ClInclude Include="Source\memory\module.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

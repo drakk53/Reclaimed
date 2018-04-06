@@ -1,7 +1,7 @@
+#include <cstring>
 #include "input\input.hpp"
 #include "memory\module.hpp"
-#include <string>
-#include <sstream>
+
 namespace blam
 {
 	extern "C" int __declspec(dllexport) __cdecl module_get_version()
@@ -54,21 +54,81 @@ namespace blam
 		return static_cast<bool(__stdcall *)(long, long, const char *)>(module_get_address(0x7EF40))(map_id, campaign_id, map_name);
 	}
 
+	void map_forceload(const char *map_path, long_enum map_type, long_enum game_type)
+	{
+		*(long *)module_get_address(0x2D2B90C) = game_type;
+		*(long *)module_get_address(0x2D2B5E0) = map_type;
+		*(byte *)module_get_address(0x2D2BA31) = 0;
+		module_patch_memory(0x2D2B609, map_path, strlen(map_path) + 1);
+		*(bool *)module_get_address(0x2D2B5D0) = true;
+	}
+
 	void *game_tick()
 	{
 		static bool allow_load = false;
-		bool f1_key_is_down = input_key_is_down(_key_f1, _input_type_special);
 
-		if (allow_load && f1_key_is_down)
+		if (allow_load)
 		{
-			*(long *)module_get_address(0x2D2B90C) = 5; // game_type == forge
-			*(long *)module_get_address(0x2D2B5E0) = 2; // game_mode == multiplayer
-			*(byte *)module_get_address(0x2D2BA31) = 0; // game_time == 0
-			module_patch_memory(0x2D2B609, "maps\\guardian.map", 18);
-			
-			*(bool *)module_get_address(0x2D2B5D0) = true;
-
-			allow_load = false;
+			if (input_key_is_down(_key_f1, _input_type_special))
+			{
+				map_forceload("maps\\bunkerworld.map", 2, 5);
+				allow_load = false;
+			}
+			else if (input_key_is_down(_key_f2, _input_type_special))
+			{
+				map_forceload("maps\\chill.map", 2, 5);
+				allow_load = false;
+			}
+			else if (input_key_is_down(_key_f3, _input_type_special))
+			{
+				map_forceload("maps\\cyberdyne.map", 2, 5);
+				allow_load = false;
+			}
+			else if (input_key_is_down(_key_f4, _input_type_special))
+			{
+				map_forceload("maps\\deadlock.map", 2, 5);
+				allow_load = false;
+			}
+			else if (input_key_is_down(_key_f5, _input_type_special))
+			{
+				map_forceload("maps\\guardian.map", 2, 5);
+				allow_load = false;
+			}
+			else if (input_key_is_down(_key_f6, _input_type_special))
+			{
+				map_forceload("maps\\riverworld.map", 2, 5);
+				allow_load = false;
+			}
+			else if (input_key_is_down(_key_f7, _input_type_special))
+			{
+				map_forceload("maps\\s3d_avalanche.map", 2, 5);
+				allow_load = false;
+			}
+			else if (input_key_is_down(_key_f8, _input_type_special))
+			{
+				map_forceload("maps\\s3d_edge.map", 2, 5);
+				allow_load = false;
+			}
+			else if (input_key_is_down(_key_f9, _input_type_special))
+			{
+				map_forceload("maps\\s3d_reactor.map", 2, 5);
+				allow_load = false;
+			}
+			else if (input_key_is_down(_key_f10, _input_type_special))
+			{
+				map_forceload("maps\\s3d_turf.map", 2, 5);
+				allow_load = false;
+			}
+			else if (input_key_is_down(_key_f11, _input_type_special))
+			{
+				map_forceload("maps\\shrine.map", 2, 5);
+				allow_load = false;
+			}
+			else if (input_key_is_down(_key_f12, _input_type_special))
+			{
+				map_forceload("maps\\zanzibar.map", 2, 5);
+				allow_load = false;
+			}
 		}
 		else
 		{
@@ -82,11 +142,6 @@ namespace blam
 	{
 		SetProcessDPIAware();
 		DisableThreadLibraryCalls(module);
-
-		std::stringstream ss;
-		ss << "Base address: 0x" << std::hex << module_get_address(0);
-
-		MessageBox(nullptr, ss.str().c_str(), "", MB_OK);
 
 		module_unprotect_memory();
 

@@ -1,6 +1,7 @@
 #include "input\input.hpp"
 #include "memory\module.hpp"
-
+#include <string>
+#include <sstream>
 namespace blam
 {
 	extern "C" int __declspec(dllexport) __cdecl module_get_version()
@@ -55,8 +56,24 @@ namespace blam
 
 	void *game_tick()
 	{
-		if (input_key_is_down(_key_escape, _input_type_special))
-			map_load(320, -1, "maps\\guardian.map"); // not working atm...
+		static bool allow_load = false;
+		bool f1_key_is_down = input_key_is_down(_key_f1, _input_type_special);
+
+		if (allow_load && f1_key_is_down)
+		{
+			*(long *)module_get_address(0x2D2B90C) = 5; // game_type == forge
+			*(long *)module_get_address(0x2D2B5E0) = 2; // game_mode == multiplayer
+			*(byte *)module_get_address(0x2D2BA31) = 0; // game_time == 0
+			module_patch_memory(0x2D2B609, "maps\\guardian.map", 18);
+			
+			*(bool *)module_get_address(0x2D2B5D0) = true;
+
+			allow_load = false;
+		}
+		else
+		{
+			allow_load = true;
+		}
 
 		return game_tick_internal();
 	}
@@ -65,6 +82,11 @@ namespace blam
 	{
 		SetProcessDPIAware();
 		DisableThreadLibraryCalls(module);
+
+		std::stringstream ss;
+		ss << "Base address: 0x" << std::hex << module_get_address(0);
+
+		MessageBox(nullptr, ss.str().c_str(), "", MB_OK);
 
 		module_unprotect_memory();
 
@@ -81,6 +103,9 @@ namespace blam
 
 		// hook the game_disposing function
 		if (!module_patch_call(0x150F, shell_dispose)) return false;
+		
+		// mp patch?
+		if (!module_patch_memory(0x19ECED, "\x90\x90\x90\x90\x90", 5)) return false;
 
 		// disable hf2p/scaleform (crappily)
 		if (!module_patch_call(0x2BD12B, init_hf2p_system)) return false;

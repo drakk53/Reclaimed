@@ -29,6 +29,8 @@ namespace blam
 
 	bool network_apply_patches()
 	{
+		if (!module_patch_call(0x27FF9, managed_session_create_session_internal)) return false;
+
 		return true;
 	}
 }

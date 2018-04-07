@@ -54,6 +54,11 @@ namespace blam
 		return static_cast<bool(__stdcall *)(long, long, const char *)>(module_get_address(0x7EF40))(map_id, campaign_id, map_name);
 	}
 
+	inline void exit(int code)
+	{
+		static_cast<void(__cdecl *)(int)>(module_get_address(0x78FFDA))(code);
+	}
+
 	void map_forceload(const char *map_path, long_enum map_type, long_enum game_type)
 	{
 		*(long *)module_get_address(0x2D2B90C) = game_type;
@@ -71,7 +76,12 @@ namespace blam
 
 		if (allow_load)
 		{
-			if (input_key_is_down(_key_f1, _input_type_special))
+			if (input_key_is_down(_key_escape, _input_type_special))
+			{
+				exit(0);
+				allow_load = false;
+			}
+			else if (input_key_is_down(_key_f1, _input_type_special))
 			{
 				map_forceload("maps\\bunkerworld.map", 2, 5);
 				allow_load = false;

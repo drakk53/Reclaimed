@@ -1,6 +1,7 @@
 #include <cstring>
 #include "input\input.hpp"
 #include "memory\module.hpp"
+#include "network\network.hpp"
 
 namespace blam
 {
@@ -210,6 +211,8 @@ namespace blam
 		if (!module_patch_call(0x97083, game_tick)) return false;
 		if (!module_patch_call(0x97094, game_tick)) return false;
 		if (!module_patch_call(0x971B0, game_tick)) return false;
+
+		if (!network_apply_patches()) return false;
 
 		return true;
 	}

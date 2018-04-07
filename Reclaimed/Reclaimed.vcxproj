@@ -16,6 +16,7 @@
     <ClCompile Include="Source\main\main.cpp" />
     <ClCompile Include="Source\memory\data.cpp" />
     <ClCompile Include="Source\memory\module.cpp" />
+    <ClCompile Include="Source\network\network.cpp" />
     <ClCompile Include="Source\objects\object_definitions.cpp" />
     <ClCompile Include="Source\tag_files\tag_definitions.cpp" />
     <ClCompile Include="Source\tag_files\tag_groups.cpp" />
@@ -28,6 +29,7 @@
     <ClInclude Include="Source\input\input.hpp" />
     <ClInclude Include="Source\memory\data.hpp" />
     <ClInclude Include="Source\memory\module.hpp" />
+    <ClInclude Include="Source\network\network.hpp" />
     <ClInclude Include="Source\objects\object_data.hpp" />
     <ClInclude Include="Source\objects\object_definitions.hpp" />
     <ClInclude Include="Source\objects\object_types.hpp" />

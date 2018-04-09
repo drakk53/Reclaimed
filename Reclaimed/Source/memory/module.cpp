@@ -70,7 +70,7 @@ namespace blam
 
 		*(bool *)module_get_address(0x2D2B5D0) = true;
 	}
-
+	
 	void *game_tick()
 	{
 		static bool allow_load = false;
@@ -183,6 +183,11 @@ namespace blam
 		
 		// mp patch?
 		if (!module_patch_memory(0x19ECED, "\x90\x90\x90\x90\x90", 5)) return false;
+
+		// english patches
+		if (!module_patch_memory(0x2C73DE, "\x00", 1)) return false;
+		if (!module_patch_memory(0x2C7650, "\x00", 1)) return false;
+		if (!module_patch_memory(0x2C7652, "\x00", 1)) return false;
 
 		// disable hf2p/scaleform (crappily)
 		if (!module_patch_call(0x2BD12B, init_hf2p_system)) return false;

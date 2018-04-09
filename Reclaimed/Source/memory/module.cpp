@@ -256,6 +256,22 @@ namespace blam
 		return (char *)base_address + offset;
 	}
 
+	void *module_get_tls_address(const dword offset)
+	{
+		static void *tls_address = nullptr;
+
+		if (tls_address == nullptr)
+		{
+			_asm
+			{
+				mov     eax, dword ptr fs:[2Ch]
+				mov		tls_address, eax
+			}
+		}
+
+		return (char *)tls_address + offset;
+	}
+
 	void module_unprotect_memory()
 	{
 		MEMORY_BASIC_INFORMATION MemInfo;

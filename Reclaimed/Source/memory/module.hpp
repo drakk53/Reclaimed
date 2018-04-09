@@ -18,6 +18,9 @@ namespace blam
 	// gets the base address of the game module
 	void *module_get_address(const dword offset = 0);
 
+	// gets the thread local storage address of the game module
+	void *module_get_tls_address(const dword offset = 0);
+
 	// unprotects the memory of the game module
 	void module_unprotect_memory();
 

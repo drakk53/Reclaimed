@@ -153,6 +153,12 @@ namespace blam
 
 	void sub_5B6920() {}
 
+	bool disable_binks = true; // TODO: move this somewhere else when configs are a thing
+	bool __fastcall sub_7E6630(int video_id, char *dest)
+	{
+		return (disable_binks ? false : static_cast<char(__fastcall *)(int, char*)>(module_get_address(0x3E6630))(video_id, dest));
+	}
+
 	bool module_initialize(HMODULE module)
 	{
 		SetProcessDPIAware();
@@ -188,6 +194,10 @@ namespace blam
 		if (!module_patch_memory(0x2C73DE, "\x00", 1)) return false;
 		if (!module_patch_memory(0x2C7650, "\x00", 1)) return false;
 		if (!module_patch_memory(0x2C7652, "\x00", 1)) return false;
+
+		// bink loading hooks
+		if (!module_patch_call(0x98308, sub_7E6630)) return false;
+		if (!module_patch_call(0x3E65C8, sub_7E6630)) return false;
 
 		// disable hf2p/scaleform (crappily)
 		if (!module_patch_call(0x2BD12B, init_hf2p_system)) return false;

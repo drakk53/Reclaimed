@@ -2,5 +2,5 @@
 
 namespace blam
 {
-	bool network_apply_patches();
+	bool network_initialize();
 }

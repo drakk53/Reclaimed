@@ -42,6 +42,9 @@
     <ClCompile Include="Source\network\network.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\preferences\preferences.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\cache\cache_files.hpp">
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\network\network.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\preferences\preferences.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

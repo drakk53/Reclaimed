@@ -1,7 +1,7 @@
-#include <cstring>
 #include "input\input.hpp"
 #include "memory\module.hpp"
 #include "network\network.hpp"
+#include "preferences\preferences.hpp"
 
 namespace blam
 {
@@ -65,8 +65,11 @@ namespace blam
 		*(long *)module_get_address(0x2D2B90C) = game_type;
 		*(long *)module_get_address(0x2D2B5E0) = map_type;
 		*(byte *)module_get_address(0x2D2BA31) = 0;
-		
-		module_patch_memory(0x2D2B609, map_path, strlen(map_path) + 1);
+
+		char *map_path_end;
+		for (map_path_end = (char *)map_path; *map_path_end != '\0'; map_path_end++);
+
+		module_patch_memory(0x2D2B609, map_path, map_path_end - map_path);
 
 		*(bool *)module_get_address(0x2D2B5D0) = true;
 	}
@@ -166,6 +169,9 @@ namespace blam
 
 		module_unprotect_memory();
 
+		if (!preferences_initialize())
+			return false;
+
 		// disable gameshield initialization
 		if (!module_patch_memory(0x2BCDB6, "\x90\x90\x90\x90\x90", 5)) return false;
 
@@ -181,19 +187,13 @@ namespace blam
 		if (!module_patch_memory(0x83CC1, "\x90\x90", 2)) return false;
 		if (!module_patch_memory(0x847A9, "\x90\x90", 2)) return false;
 
-		// disable preferences checksum
-		if (!module_patch_memory(0x9FAF8, "\x90\x90", 2)) return false;
-
-		// hook the game_disposing function
-		if (!module_patch_call(0x150F, shell_dispose)) return false;
-		
-		// mp patch?
-		if (!module_patch_memory(0x19ECED, "\x90\x90\x90\x90\x90", 5)) return false;
-
 		// english patches
 		if (!module_patch_memory(0x2C73DE, "\x00", 1)) return false;
 		if (!module_patch_memory(0x2C7650, "\x00", 1)) return false;
 		if (!module_patch_memory(0x2C7652, "\x00", 1)) return false;
+
+		// mp patch?
+		if (!module_patch_memory(0x19ECED, "\x90\x90\x90\x90\x90", 5)) return false;
 
 		// bink loading hooks
 		if (!module_patch_call(0x98308, sub_7E6630)) return false;
@@ -221,13 +221,17 @@ namespace blam
 		if (!module_patch_call(0x2BD349, sub_8F25C0)) return false;
 		if (!module_patch_call(0x2BD34E, sub_759BB0)) return false;
 
-		// game tick
+		// hook the 'shell_dispose' function
+		if (!module_patch_call(0x150F, shell_dispose)) return false;
+
+		// hook the 'game_tick' function
 		if (!module_patch_call(0x95EBE, game_tick)) return false;
 		if (!module_patch_call(0x97083, game_tick)) return false;
 		if (!module_patch_call(0x97094, game_tick)) return false;
 		if (!module_patch_call(0x971B0, game_tick)) return false;
 
-		if (!network_apply_patches()) return false;
+		if (!network_initialize())
+			return false;
 
 		return true;
 	}
@@ -235,6 +239,19 @@ namespace blam
 	bool module_dispose()
 	{
 		return true;
+	}
+
+	void module_unprotect_memory()
+	{
+		MEMORY_BASIC_INFORMATION MemInfo;
+
+		for (auto offset = 0; VirtualQuery(module_get_address(offset), &MemInfo, sizeof(MEMORY_BASIC_INFORMATION));)
+		{
+			offset += MemInfo.RegionSize;
+
+			if (MemInfo.Protect == PAGE_EXECUTE_READ)
+				VirtualProtect(MemInfo.BaseAddress, MemInfo.RegionSize, PAGE_EXECUTE_READWRITE, &MemInfo.Protect);
+		}
 	}
 
 	void *module_get_address(const dword offset)
@@ -264,25 +281,12 @@ namespace blam
 		{
 			_asm
 			{
-				mov     eax, dword ptr fs:[2Ch]
-				mov		tls_address, eax
+				mov eax, dword ptr fs:[2Ch]
+				mov tls_address, eax
 			}
 		}
 
 		return (char *)tls_address + offset;
-	}
-
-	void module_unprotect_memory()
-	{
-		MEMORY_BASIC_INFORMATION MemInfo;
-
-		for (auto offset = 0; VirtualQuery(module_get_address(offset), &MemInfo, sizeof(MEMORY_BASIC_INFORMATION));)
-		{
-			offset += MemInfo.RegionSize;
-
-			if (MemInfo.Protect == PAGE_EXECUTE_READ)
-				VirtualProtect(MemInfo.BaseAddress, MemInfo.RegionSize, PAGE_EXECUTE_READWRITE, &MemInfo.Protect);
-		}
 	}
 
 	bool module_patch_memory(const dword offset, const void *const data, const long element_count, const long element_size)

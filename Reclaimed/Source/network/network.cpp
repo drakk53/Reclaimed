@@ -27,9 +27,10 @@ namespace blam
 		return result;
 	}
 
-	bool network_apply_patches()
+	bool network_initialize()
 	{
-		if (!module_patch_call(0x27FF9, managed_session_create_session_internal)) return false;
+		if (!module_patch_call(0x27FF9, managed_session_create_session_internal))
+			return false;
 
 		return true;
 	}

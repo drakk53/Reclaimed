@@ -15,14 +15,14 @@ namespace blam
 	// disposes the game module
 	bool module_dispose();
 
+	// unprotects the memory of the game module
+	void module_unprotect_memory();
+
 	// gets the base address of the game module
 	void *module_get_address(const dword offset = 0);
 
 	// gets the thread local storage address of the game module
 	void *module_get_tls_address(const dword offset = 0);
-
-	// unprotects the memory of the game module
-	void module_unprotect_memory();
 
 	// patches an address in the game module
 	bool module_patch_memory(const dword offset, const void *const data, const long element_count, const long element_size = sizeof(char));
